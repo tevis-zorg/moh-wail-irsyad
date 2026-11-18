@@ -1,0 +1,42 @@
+# Dependencies
+/node_modules/
+/.pnp
+.pnp.*
+
+# Next.js and build output
+/.next/
+/out/
+/build/
+/dist/
+/.vercel/
+/coverage/
+
+# Local environment files. Keep the documented placeholder template tracked.
+.env*
+!.env.example
+
+# Google service-account and other local credentials
+**/*service-account*.json
+**/*service_account*.json
+**/*credentials*.json
+*.pem
+*.key
+
+# Owner-supplied source materials are kept locally until approved for
+# publication. Public media should be served from the controlled Drive proxy.
+/assets/
+
+# Logs and generated TypeScript files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+next-env.d.ts
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
