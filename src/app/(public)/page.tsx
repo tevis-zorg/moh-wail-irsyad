@@ -1,4 +1,22 @@
-export default function HomePage() {
+import { getPublishedPerformances } from "../../lib/portfolio/performances";
+import type { PublishedPerformance } from "../../lib/portfolio/performances";
+import { getPublishedResearchPapers } from "../../lib/portfolio/research-papers";
+
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const [performancesResult, papersResult] = await Promise.all([
+    getPublishedPerformances(),
+    getPublishedResearchPapers(),
+  ]);
+
+  const photoGroups = new Map<string, PublishedPerformance[]>();
+  for (const record of performancesResult.records) {
+    const group = photoGroups.get(record.event_name) ?? [];
+    group.push(record);
+    photoGroups.set(record.event_name, group);
+  }
+
   return (
     <>
       <section
@@ -51,6 +69,151 @@ export default function HomePage() {
             aria-hidden="true"
             className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(199,173,134,0.08),transparent_58%)]"
           />
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="works-title"
+        className="border-t border-portfolio-border/70 bg-portfolio-surface/60"
+        id="works"
+      >
+        <div className="mx-auto max-w-7xl space-y-16 px-5 py-20 sm:px-8 sm:py-28">
+          <header className="max-w-3xl">
+            <p className="mb-5 text-xs font-medium tracking-[0.22em] text-portfolio-accent">
+              SELECTED WORK
+            </p>
+            <h2
+              className="font-serif text-4xl font-normal tracking-[-0.04em] text-portfolio-text sm:text-5xl"
+              id="works-title"
+            >
+              My Works
+            </h2>
+            <p className="mt-5 text-sm leading-7 text-portfolio-muted sm:text-base sm:leading-8">
+              Photos and research papers approved for public viewing.
+            </p>
+          </header>
+
+          <section aria-labelledby="photos-title" className="space-y-8" id="photos">
+            <div className="flex flex-wrap items-end justify-between gap-4 border-b border-portfolio-border pb-4">
+              <div>
+                <p className="mb-2 text-xs tracking-[0.18em] text-portfolio-accent">
+                  PERFORMANCE ARCHIVE
+                </p>
+                <h3 className="font-serif text-3xl text-portfolio-text" id="photos-title">
+                  Photos
+                </h3>
+              </div>
+            </div>
+
+            {performancesResult.error ? (
+              <p className="border border-red-900/70 p-5 text-sm leading-7 text-red-200" role="alert">
+                Photos are temporarily unavailable. Please try again later.
+              </p>
+            ) : performancesResult.records.length === 0 ? (
+              <p className="text-sm leading-7 text-portfolio-muted" role="status">
+                No published photos are available yet.
+              </p>
+            ) : (
+              <div className="space-y-12">
+                {Array.from(photoGroups, ([eventName, records]) => (
+                  <section aria-label={`Photos from ${eventName}`} className="space-y-5" key={eventName}>
+                    <h4 className="font-serif text-2xl text-portfolio-text">{eventName}</h4>
+                    <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
+                      {records.map((record) => (
+                        <article className="min-w-0" key={record.id}>
+                          <div className="aspect-[4/3] overflow-hidden border border-portfolio-border bg-portfolio-background">
+                            {/* Native img keeps the controlled same-origin proxy URL and fixed ratio. */}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              alt={`${record.title} — ${record.event_name}`}
+                              className="h-full w-full object-cover"
+                              decoding="async"
+                              height="900"
+                              loading="lazy"
+                              src={`/api/image/${encodeURIComponent(record.drive_file_id)}`}
+                              width="1200"
+                            />
+                          </div>
+                          <div className="pt-4">
+                            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                              <h5 className="font-serif text-xl text-portfolio-text">{record.title}</h5>
+                              {record.year ? (
+                                <p className="text-xs tracking-wide text-portfolio-muted">{record.year}</p>
+                              ) : null}
+                            </div>
+                            {record.description ? (
+                              <p className="mt-2 text-sm leading-6 text-portfolio-muted">
+                                {record.description}
+                              </p>
+                            ) : null}
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section
+            aria-labelledby="research-title"
+            className="space-y-8 border-t border-portfolio-border/70 pt-12"
+            id="research-papers"
+          >
+            <div>
+              <p className="mb-2 text-xs tracking-[0.18em] text-portfolio-accent">
+                PUBLICATIONS
+              </p>
+              <h3 className="font-serif text-3xl text-portfolio-text" id="research-title">
+                Research Papers
+              </h3>
+            </div>
+
+            {papersResult.error ? (
+              <p className="border border-red-900/70 p-5 text-sm leading-7 text-red-200" role="alert">
+                Research papers are temporarily unavailable. Please try again later.
+              </p>
+            ) : papersResult.records.length === 0 ? (
+              <p className="text-sm leading-7 text-portfolio-muted" role="status">
+                No published research papers are available yet.
+              </p>
+            ) : (
+              <div className="divide-y divide-portfolio-border/70 border-y border-portfolio-border/70">
+                {papersResult.records.map((paper) => (
+                  <article className="grid gap-5 py-6 sm:grid-cols-[1fr_auto] sm:items-center" key={paper.id}>
+                    <div className="min-w-0">
+                      <h4 className="font-serif text-xl leading-snug text-portfolio-text sm:text-2xl">
+                        {paper.title}
+                      </h4>
+                      {paper.authors ? (
+                        <p className="mt-2 text-sm leading-6 text-portfolio-muted">{paper.authors}</p>
+                      ) : null}
+                      {paper.publication_name || paper.year ? (
+                        <p className="mt-1 text-sm leading-6 text-portfolio-muted">
+                          {[paper.publication_name, paper.year].filter(Boolean).join(" · ")}
+                        </p>
+                      ) : null}
+                      {paper.abstract ? (
+                        <p className="mt-4 max-w-3xl text-sm leading-7 text-portfolio-muted">
+                          {paper.abstract}
+                        </p>
+                      ) : null}
+                    </div>
+                    <a
+                      className="inline-flex min-h-11 w-fit items-center border-b border-portfolio-accent px-1 text-sm text-portfolio-accent transition-colors hover:text-portfolio-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-portfolio-accent"
+                      href={`/api/paper/${encodeURIComponent(paper.drive_file_id)}`}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      Open PDF
+                      <span className="sr-only">: {paper.title} (opens in a new tab)</span>
+                    </a>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
       </section>
 
