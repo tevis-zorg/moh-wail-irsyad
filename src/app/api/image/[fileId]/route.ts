@@ -28,6 +28,18 @@ function errorResponse(message: string, status: number) {
   );
 }
 
+function normalizeMimeType(value: string | null | undefined) {
+  return value?.split(";", 1)[0]?.trim().toLowerCase() ?? "";
+}
+
+function logDriveFailure(stage: string, error: unknown) {
+  const status = getGoogleStatus(error);
+  console.error("Google Drive image request failed", {
+    stage,
+    status: status ?? "unknown",
+  });
+}
+
 function getGoogleStatus(error: unknown): number | undefined {
   if (typeof error !== "object" || error === null) {
     return undefined;
@@ -93,12 +105,20 @@ export async function GET(
       fields: "id,mimeType",
     });
 
+    const metadataMimeType = normalizeMimeType(metadataResponse.data.mimeType);
+
     if (
       metadataResponse.status !== 200 ||
       metadataResponse.data.id !== record.drive_file_id ||
-      metadataResponse.data.mimeType !== record.mime_type ||
-      !IMAGE_MIME_TYPES.has(metadataResponse.data.mimeType)
+      metadataMimeType !== record.mime_type ||
+      !IMAGE_MIME_TYPES.has(metadataMimeType)
     ) {
+      console.error("Google Drive image metadata mismatch", {
+        stage: "metadata-validation",
+        status: metadataResponse.status,
+        registeredMimeType: record.mime_type,
+        upstreamMimeType: metadataMimeType || "missing",
+      });
       return errorResponse("Image is unavailable.", 502);
     }
 
@@ -110,10 +130,7 @@ export async function GET(
       { responseType: "stream" },
     );
 
-    const upstreamMimeType = mediaResponse.headers["content-type"]
-      ?.split(";", 1)[0]
-      ?.trim()
-      .toLowerCase();
+    const upstreamMimeType = normalizeMimeType(mediaResponse.headers["content-type"]);
 
     if (
       mediaResponse.status !== 200 ||
@@ -121,6 +138,12 @@ export async function GET(
       !IMAGE_MIME_TYPES.has(upstreamMimeType)
     ) {
       mediaResponse.data.destroy();
+      console.error("Google Drive image media mismatch", {
+        stage: "media-validation",
+        status: mediaResponse.status,
+        registeredMimeType: record.mime_type,
+        upstreamMimeType: upstreamMimeType || "missing",
+      });
       return errorResponse("Image is unavailable.", 502);
     }
 
@@ -139,6 +162,7 @@ export async function GET(
     const body = Readable.toWeb(mediaResponse.data) as ReadableStream<Uint8Array>;
     return new Response(body, { status: 200, headers });
   } catch (error) {
+    logDriveFailure("request", error);
     const upstreamStatus = getGoogleStatus(error);
     const status = upstreamStatus === 404 ? 404 : 502;
     const message = status === 404 ? "Image not found." : "Image is unavailable.";

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getPublishedPerformances } from "../../lib/portfolio/performances";
 import type { PublishedPerformance } from "../../lib/portfolio/performances";
 import { getPublishedResearchPapers } from "../../lib/portfolio/research-papers";
@@ -55,20 +56,49 @@ export default async function HomePage() {
         >
           <div
             aria-hidden="true"
-            className="absolute inset-4 border border-portfolio-border/70 sm:inset-6"
-          />
+            className="relative inset-x-100 border border-portfolio-border/70 sm:inset-6"
+          >
+            <Image
+              alt="Stage performance"
+              src="/assets/argjog.jpg"
+              height={500}
+              width={400}
+            />
+          </div>
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 top-1/2 h-px bg-portfolio-border/60"
-          />
+            className="relative inset-x-0 top-1/2 h-px bg-portfolio-border/60"
+          >
+            <Image
+              alt="Stage performance"
+              src="/assets/BoS.jpg"
+              height={500}
+              width={400}
+            />
+          </div>
           <div
             aria-hidden="true"
-            className="absolute inset-y-0 left-1/2 w-px bg-portfolio-border/60"
-          />
+            className="relative inset-y-0 left-1/2 w-px bg-portfolio-border/60"
+          >
+            <Image
+              alt="Stage performance"
+              src="/assets/ESiTL.jpg"
+              height={500}
+              width={400}
+            />
+          </div>
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(199,173,134,0.08),transparent_58%)]"
-          />
+            className="relative inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(199,173,134,0.08),transparent_58%)]"
+          >
+            <Image
+              className="object-cover object-bottom"
+              alt="Stage performance"
+              src="/assets/JIPAF.jpg"
+              height={250}
+              width={300}
+            />
+          </div>
         </div>
       </section>
 
