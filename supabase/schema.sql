@@ -11,7 +11,7 @@ create table if not exists public.performances (
     year integer check (year is null or year between 1900 and 2200),
     drive_file_id text not null unique,
     mime_type text not null
-        check (mime_type in ('image/jpeg', 'image/png', 'image/webp', 'image/gif')),
+        check (mime_type in ('image/jpg', 'image/png', 'image/webp', 'image/gif')),
     is_published boolean not null default false,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()

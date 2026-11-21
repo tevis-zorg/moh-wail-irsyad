@@ -1,7 +1,7 @@
 import { createClient } from "../supabase/server";
 
 const APPROVED_IMAGE_MIME_TYPES = [
-  "image/jpeg",
+  "iamge/jpg",
   "image/png",
   "image/webp",
   "image/gif",
