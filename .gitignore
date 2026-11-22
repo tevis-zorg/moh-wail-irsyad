@@ -24,7 +24,6 @@
 
 # Owner-supplied source materials are kept locally until approved for
 # publication. Public media should be served from the controlled Drive proxy.
-/public/assets/
 /dev-docs/
 
 # Logs and generated TypeScript files
