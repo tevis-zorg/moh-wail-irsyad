@@ -6,7 +6,11 @@ import { createClient } from "../../../../lib/supabase/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+<<<<<<< HEAD
 const DOCUMENT_MIME_TYPES = new Set([
+=======
+const DOC_MIME_TYPE = new Set([
+>>>>>>> 00e4b8b5effe414292674de3c70ac2f94db043da
     "application/pdf",
     "application/msword",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
