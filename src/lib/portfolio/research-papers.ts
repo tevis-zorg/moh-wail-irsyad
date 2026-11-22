@@ -1,6 +1,7 @@
 import { createClient } from "../supabase/server";
 
 const APPROVED_DOCUMENTS_MIME_TYPES = [
+  "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   "application/pplication/vnd.ms-powerpoint",
