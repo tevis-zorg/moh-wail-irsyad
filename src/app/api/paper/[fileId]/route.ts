@@ -6,7 +6,13 @@ import { createClient } from "../../../../lib/supabase/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const PDF_MIME_TYPE = "application/pdf";
+const DOC_MIME_TYPE = new Set({
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+});
+
 const FILE_ID_PATTERN = /^[A-Za-z0-9_-]{10,200}$/;
 
 function errorResponse(message: string, status: number) {
@@ -76,7 +82,7 @@ export async function GET(
     return errorResponse("Paper not found.", 404);
   }
 
-  if (record.mime_type !== PDF_MIME_TYPE) {
+  if (record.mime_type !== DOC_MIME_TYPE) {
     return errorResponse("Unsupported paper type.", 415);
   }
 
@@ -90,7 +96,7 @@ export async function GET(
     if (
       metadataResponse.status !== 200 ||
       metadataResponse.data.id !== record.drive_file_id ||
-      metadataResponse.data.mimeType !== PDF_MIME_TYPE
+      metadataResponse.data.mimeType !== DOC_MIME_TYPE
     ) {
       return errorResponse("Paper is unavailable.", 502);
     }
@@ -108,13 +114,13 @@ export async function GET(
       ?.trim()
       .toLowerCase();
 
-    if (mediaResponse.status !== 200 || upstreamMimeType !== PDF_MIME_TYPE) {
+    if (mediaResponse.status !== 200 || upstreamMimeType !== DOC_MIME_TYPE) {
       mediaResponse.data.destroy();
       return errorResponse("Paper is unavailable.", 502);
     }
 
     const headers = new Headers({
-      "Content-Type": PDF_MIME_TYPE,
+      "Content-Type": DOC_MIME_TYPE,
       "Cache-Control": "public, max-age=60, s-maxage=300",
       "X-Content-Type-Options": "nosniff",
     });

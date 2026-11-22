@@ -1,5 +1,12 @@
 import { createClient } from "../supabase/server";
 
+const APPROVED_DOCUMENTS_MIME_TYPES = [
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/pplication/vnd.ms-powerpoint",
+  "application/application/vnd.openxmlformats-officedocument.presentationml.presentation"
+]
+
 export type PublishedResearchPaper = {
   id: string;
   title: string;
@@ -23,7 +30,7 @@ export async function getPublishedResearchPapers(): Promise<PublishedResearchPap
         "id, title, authors, publication_name, year, abstract, drive_file_id",
       )
       .eq("is_published", true)
-      .eq("mime_type", "application/pdf")
+      .in("mime_type", APPROVED_DOCUMENTS_MIME_TYPES)
       .order("publication_name", { ascending: true, nullsFirst: false })
       .order("year", { ascending: false, nullsFirst: false })
       .order("title", { ascending: true });

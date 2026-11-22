@@ -103,6 +103,7 @@ export async function GET(
     const metadataResponse = await drive.files.get({
       fileId: record.drive_file_id,
       fields: "id,mimeType",
+      supportsAllDrives: true,
     });
 
     const metadataMimeType = normalizeMimeType(metadataResponse.data.mimeType);
@@ -126,15 +127,20 @@ export async function GET(
       {
         fileId: record.drive_file_id,
         alt: "media",
+        supportsAllDrives: true,
       },
       { responseType: "stream" },
     );
 
-    const upstreamMimeType = normalizeMimeType(mediaResponse.headers["content-type"]);
+    const mediaHeaderMimeType = normalizeMimeType(mediaResponse.headers["content-type"]);
+    // Some Drive media responses omit Content-Type even after metadata has
+    // verified the exact file's MIME type. Keep that verified metadata as the
+    // fallback, but reject a present conflicting header.
+    const upstreamMimeType = mediaHeaderMimeType || metadataMimeType;
 
     if (
       mediaResponse.status !== 200 ||
-      upstreamMimeType !== record.mime_type ||
+      (mediaHeaderMimeType && mediaHeaderMimeType !== record.mime_type) ||
       !IMAGE_MIME_TYPES.has(upstreamMimeType)
     ) {
       mediaResponse.data.destroy();

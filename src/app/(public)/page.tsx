@@ -18,6 +18,8 @@ export default async function HomePage() {
     photoGroups.set(record.event_name, group);
   }
 
+  const performanceHighlights = performancesResult.records.slice(0, 4);
+
   return (
     <>
       <section
@@ -49,55 +51,39 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div
-          aria-label="Portrait or performance image placeholder"
-          className="relative mx-auto aspect-[4/5] w-full max-w-lg overflow-hidden border border-portfolio-border bg-portfolio-surface"
-          role="img"
-        >
+        <div className="mx-auto w-full max-w-lg">
+          <h2 className="mb-5 font-serif text-2xl font-normal tracking-[-0.03em] text-portfolio-text sm:text-3xl">
+            Performance Highlights
+          </h2>
           <div
-            aria-hidden="true"
-            className="relative inset-x-100 border border-portfolio-border/70 sm:inset-6"
+            aria-label="Performance highlights"
+            className="grid aspect-[4/5] grid-cols-2 gap-2 overflow-hidden border border-portfolio-border bg-portfolio-surface p-2"
           >
-            <Image
-              alt="Stage performance"
-              src="/assets/argjog.jpg"
-              height={500}
-              width={400}
-            />
-          </div>
-          <div
-            aria-hidden="true"
-            className="relative inset-x-0 top-1/2 h-px bg-portfolio-border/60"
-          >
-            <Image
-              alt="Stage performance"
-              src="/assets/BoS.jpg"
-              height={500}
-              width={400}
-            />
-          </div>
-          <div
-            aria-hidden="true"
-            className="relative inset-y-0 left-1/2 w-px bg-portfolio-border/60"
-          >
-            <Image
-              alt="Stage performance"
-              src="/assets/ESiTL.jpg"
-              height={500}
-              width={400}
-            />
-          </div>
-          <div
-            aria-hidden="true"
-            className="relative inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(199,173,134,0.08),transparent_58%)]"
-          >
-            <Image
-              className="object-cover object-bottom"
-              alt="Stage performance"
-              src="/assets/JIPAF.jpg"
-              height={250}
-              width={300}
-            />
+            {performanceHighlights.length > 0 ? (
+              performanceHighlights.map((record, index) => (
+                <a
+                  aria-label={`Open ${record.title} from ${record.event_name}`}
+                  className="relative min-h-0 overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-portfolio-accent"
+                  href={`/api/image/${encodeURIComponent(record.drive_file_id)}`}
+                  key={record.id}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <Image
+                    alt={`${record.title} — ${record.event_name}`}
+                    className="object-cover"
+                    fill
+                    priority={index === 0}
+                    sizes="(min-width: 1024px) 22vw, (min-width: 640px) 42vw, 45vw"
+                    src={`/api/image/${encodeURIComponent(record.drive_file_id)}`}
+                  />
+                </a>
+              ))
+            ) : (
+              <p className="col-span-2 flex items-center justify-center p-6 text-center text-sm leading-6 text-portfolio-muted">
+                No published performance highlights are available yet.
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -148,22 +134,26 @@ export default async function HomePage() {
                 {Array.from(photoGroups, ([eventName, records]) => (
                   <section aria-label={`Photos from ${eventName}`} className="space-y-5" key={eventName}>
                     <h4 className="font-serif text-2xl text-portfolio-text">{eventName}</h4>
-                    <div className="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4">
                       {records.map((record) => (
-                        <article className="min-w-0" key={record.id}>
-                          <div className="aspect-[4/3] overflow-hidden border border-portfolio-border bg-portfolio-background">
-                            {/* Native img keeps the controlled same-origin proxy URL and fixed ratio. */}
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              alt={`${record.title} — ${record.event_name}`}
-                              className="h-full w-full object-cover"
-                              decoding="async"
-                              height="900"
-                              loading="lazy"
-                              src={`/api/image/${encodeURIComponent(record.drive_file_id)}`}
-                              width="1200"
-                            />
-                          </div>
+                        <article className="min-w-[82vw] snap-start sm:min-w-[46vw] lg:min-w-[31vw]" key={record.id}>
+                          <a
+                            aria-label={`Open ${record.title} from ${record.event_name}`}
+                            className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-portfolio-accent"
+                            href={`/api/image/${encodeURIComponent(record.drive_file_id)}`}
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            <div className="relative aspect-[4/3] overflow-hidden border border-portfolio-border bg-portfolio-background">
+                              <Image
+                                alt={`${record.title} — ${record.event_name}`}
+                                className="object-cover"
+                                fill
+                                sizes="(min-width: 1024px) 31vw, (min-width: 640px) 46vw, 82vw"
+                                src={`/api/image/${encodeURIComponent(record.drive_file_id)}`}
+                              />
+                            </div>
+                          </a>
                           <div className="pt-4">
                             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                               <h5 className="font-serif text-xl text-portfolio-text">{record.title}</h5>
