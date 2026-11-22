@@ -226,7 +226,7 @@ export default async function HomePage() {
                       rel="noreferrer"
                       target="_blank"
                     >
-                      Open PDF
+                      Open document
                       <span className="sr-only">: {paper.title} (opens in a new tab)</span>
                     </a>
                   </article>

@@ -9,6 +9,14 @@ type ActionState = {
   message: string;
 };
 
+const APPROVED_DOCUMENT_MIME_TYPES = new Set([
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+]);
+
 function readText(formData: FormData, name: string): string | null {
   const value = formData.get(name);
 
@@ -88,8 +96,8 @@ export async function createResearchPaper(
     return { status: "error", message: "Enter a valid Google Drive File ID." };
   }
 
-  if (mimeType !== "application/pdf") {
-    return { status: "error", message: "Research papers must use application/pdf." };
+  if (!APPROVED_DOCUMENT_MIME_TYPES.has(mimeType)) {
+    return { status: "error", message: "Use an approved PDF, Word, or PowerPoint MIME type." };
   }
 
   let isPublished = false;
@@ -118,7 +126,7 @@ export async function createResearchPaper(
       publication_name: publicationName || null,
       year,
       drive_file_id: driveFileId,
-      mime_type: "application/pdf",
+      mime_type: mimeType,
       is_published: isPublished,
     });
 

@@ -26,7 +26,13 @@ create table if not exists public.research_papers (
     year integer check (year is null or year between 1900 and 2200),
     drive_file_id text not null unique,
     mime_type text not null default 'application/pdf'
-        check (mime_type in ('application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 'application/vnd.ms-powerpoint', )),
+        check (mime_type in (
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        )),
     is_published boolean not null default false,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()

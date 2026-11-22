@@ -6,12 +6,13 @@ import { createClient } from "../../../../lib/supabase/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const DOC_MIME_TYPE = new Set({
-    "application/pdf",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-});
+const DOCUMENT_MIME_TYPES = new Set([
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+]);
 
 const FILE_ID_PATTERN = /^[A-Za-z0-9_-]{10,200}$/;
 
@@ -49,6 +50,10 @@ function getGoogleStatus(error: unknown): number | undefined {
   return typeof response.status === "number" ? response.status : undefined;
 }
 
+function normalizeMimeType(value: string | null | undefined) {
+  return value?.split(";", 1)[0]?.trim().toLowerCase() ?? "";
+}
+
 export async function GET(
   _request: Request,
   context: { params: Promise<{ fileId: string }> },
@@ -82,7 +87,7 @@ export async function GET(
     return errorResponse("Paper not found.", 404);
   }
 
-  if (record.mime_type !== DOC_MIME_TYPE) {
+  if (!DOCUMENT_MIME_TYPES.has(record.mime_type)) {
     return errorResponse("Unsupported paper type.", 415);
   }
 
@@ -91,12 +96,16 @@ export async function GET(
     const metadataResponse = await drive.files.get({
       fileId: record.drive_file_id,
       fields: "id,mimeType",
+      supportsAllDrives: true,
     });
+
+    const metadataMimeType = normalizeMimeType(metadataResponse.data.mimeType);
 
     if (
       metadataResponse.status !== 200 ||
       metadataResponse.data.id !== record.drive_file_id ||
-      metadataResponse.data.mimeType !== DOC_MIME_TYPE
+      metadataMimeType !== record.mime_type ||
+      !DOCUMENT_MIME_TYPES.has(metadataMimeType)
     ) {
       return errorResponse("Paper is unavailable.", 502);
     }
@@ -105,22 +114,25 @@ export async function GET(
       {
         fileId: record.drive_file_id,
         alt: "media",
+        supportsAllDrives: true,
       },
       { responseType: "stream" },
     );
 
-    const upstreamMimeType = mediaResponse.headers["content-type"]
-      ?.split(";", 1)[0]
-      ?.trim()
-      .toLowerCase();
+    const mediaHeaderMimeType = normalizeMimeType(mediaResponse.headers["content-type"]);
+    const upstreamMimeType = mediaHeaderMimeType || metadataMimeType;
 
-    if (mediaResponse.status !== 200 || upstreamMimeType !== DOC_MIME_TYPE) {
+    if (
+      mediaResponse.status !== 200 ||
+      (mediaHeaderMimeType && mediaHeaderMimeType !== record.mime_type) ||
+      !DOCUMENT_MIME_TYPES.has(upstreamMimeType)
+    ) {
       mediaResponse.data.destroy();
       return errorResponse("Paper is unavailable.", 502);
     }
 
     const headers = new Headers({
-      "Content-Type": DOC_MIME_TYPE,
+      "Content-Type": upstreamMimeType,
       "Cache-Control": "public, max-age=60, s-maxage=300",
       "X-Content-Type-Options": "nosniff",
     });

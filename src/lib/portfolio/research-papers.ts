@@ -4,9 +4,9 @@ const APPROVED_DOCUMENTS_MIME_TYPES = [
   "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/pplication/vnd.ms-powerpoint",
-  "application/application/vnd.openxmlformats-officedocument.presentationml.presentation"
-]
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+];
 
 export type PublishedResearchPaper = {
   id: string;
