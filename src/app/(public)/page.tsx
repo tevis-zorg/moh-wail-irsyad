@@ -89,6 +89,71 @@ export default async function HomePage() {
       </section>
 
       <section
+        aria-labelledby="about-title"
+        className="border-t border-portfolio-border/70 bg-portfolio-surface/60"
+        id="about"
+      >
+        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+          <div>
+            <p className="mb-5 text-xs font-medium tracking-[0.22em] text-portfolio-accent">
+              MOH. WAIL IRSYAD
+            </p>
+            <h2
+              className="font-serif text-4xl font-normal tracking-[-0.04em] text-portfolio-text sm:text-5xl"
+              id="about-title"
+            >
+              About Me
+            </h2>
+             <div
+              className="bg-white"
+              id="about-photos"
+            >
+              <Image
+                className="pt-20 object-cover"
+                alt="Signing-artist"
+                src="/assets/photo-about-me.jpg"
+                height={700}
+                width={800}
+              />
+
+            </div>
+          </div>
+
+          <div className="max-w-3xl space-y-6 text-base leading-8 text-portfolio-muted sm:text-lg sm:leading-9">
+            <p>
+              Moh. Wail. Lahir di Sumenep, Madura, 30 Mei 1986. Ia merupakan
+              aktor, akademisi, dan seniman kolaborator yang menempuh pendidikan
+              Seni Teater jenjang S1 dan S2 di Institut Seni Budaya Indonesia
+              (ISBI) Bandung. Saat ini, ia mengabdikan diri sebagai dosen di
+              Jurusan Teater ISBI Bandung.
+            </p>
+            <p>
+              Dalam perjalanan artistiknya, Wail bersama Dr. Tony Broer
+              menginisiasi berdirinya LABORATORIUM TUBUH, sebuah ruang praktik
+              dan pertukaran gagasan yang dikembangkan sebagai pusat amalan
+              keseharian aktor, sekaligus laboratorium eksplorasi dan
+              pengembangan metode pelatihan ketubuhan.
+            </p>
+            <p>
+              Sebagai seniman, Wail aktif menjelajahi kemungkinan ekspresi
+              teater tubuh dan vokal melalui berbagai praktik lintas disiplin.
+              Ia pernah berkolaborasi dengan sejumlah komunitas dan kelompok
+              seni, di antaranya Lembana serta R.A.T.S dalam eksplorasi tubuh dan
+              teknologi robotik. Ia juga terlibat dalam berbagai kerja
+              kolaboratif bersama seniman musik, tari, dan seni rupa.
+            </p>
+            <p>
+              Hingga kini, Wail terus mengembangkan praktik artistiknya melalui
+              penelitian, eksperimentasi, dan kolaborasi. Baginya, tubuh dan
+              vokal bukan semata perangkat ekspresi pemeran, melainkan medan
+              eksplorasi yang senantiasa membuka kemungkinan-kemungkinan baru
+              dalam penciptaan seni pertunjukan.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
         aria-labelledby="works-title"
         className="border-t border-portfolio-border/70 bg-portfolio-surface/60"
         id="works"
@@ -223,7 +288,7 @@ export default async function HomePage() {
                     <a
                       className="inline-flex min-h-11 w-fit items-center border-b border-portfolio-accent px-1 text-sm text-portfolio-accent transition-colors hover:text-portfolio-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-portfolio-accent"
                       href={`/api/paper/${encodeURIComponent(paper.drive_file_id)}`}
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       target="_blank"
                     >
                       Open document
@@ -234,58 +299,6 @@ export default async function HomePage() {
               </div>
             )}
           </section>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="about-title"
-        className="border-t border-portfolio-border/70 bg-portfolio-surface/60"
-        id="about"
-      >
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
-          <div>
-            <p className="mb-5 text-xs font-medium tracking-[0.22em] text-portfolio-accent">
-              MOH. WAIL IRSYAD
-            </p>
-            <h2
-              className="font-serif text-4xl font-normal tracking-[-0.04em] text-portfolio-text sm:text-5xl"
-              id="about-title"
-            >
-              About Me
-            </h2>
-          </div>
-
-          <div className="max-w-3xl space-y-6 text-base leading-8 text-portfolio-muted sm:text-lg sm:leading-9">
-            <p>
-              Moh. Wail. Lahir di Sumenep, Madura, 30 Mei 1986. Ia merupakan
-              aktor, akademisi, dan seniman kolaborator yang menempuh pendidikan
-              Seni Teater jenjang S1 dan S2 di Institut Seni Budaya Indonesia
-              (ISBI) Bandung. Saat ini, ia mengabdikan diri sebagai dosen di
-              Jurusan Teater ISBI Bandung.
-            </p>
-            <p>
-              Dalam perjalanan artistiknya, Wail bersama Dr. Tony Broer
-              menginisiasi berdirinya LABORATORIUM TUBUH, sebuah ruang praktik
-              dan pertukaran gagasan yang dikembangkan sebagai pusat amalan
-              keseharian aktor, sekaligus laboratorium eksplorasi dan
-              pengembangan metode pelatihan ketubuhan.
-            </p>
-            <p>
-              Sebagai seniman, Wail aktif menjelajahi kemungkinan ekspresi
-              teater tubuh dan vokal melalui berbagai praktik lintas disiplin.
-              Ia pernah berkolaborasi dengan sejumlah komunitas dan kelompok
-              seni, di antaranya Lembana serta R.A.T.S dalam eksplorasi tubuh dan
-              teknologi robotik. Ia juga terlibat dalam berbagai kerja
-              kolaboratif bersama seniman musik, tari, dan seni rupa.
-            </p>
-            <p>
-              Hingga kini, Wail terus mengembangkan praktik artistiknya melalui
-              penelitian, eksperimentasi, dan kolaborasi. Baginya, tubuh dan
-              vokal bukan semata perangkat ekspresi pemeran, melainkan medan
-              eksplorasi yang senantiasa membuka kemungkinan-kemungkinan baru
-              dalam penciptaan seni pertunjukan.
-            </p>
-          </div>
         </div>
       </section>
 
@@ -316,6 +329,12 @@ export default async function HomePage() {
             >
               Instagram: @Muhammadwail
               <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+
+            <a className="text-portfolio-muted underline decoration-portfolio-accent/60 underline-offset-4 transition-colors hover:text-portfolio-text focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-portfolio-accent"
+               href="https://www.youtube.com/@mohwailirsyad9010"
+            >
+              Youtube: Moh Wail Irsyad
             </a>
           </div>
         </div>
