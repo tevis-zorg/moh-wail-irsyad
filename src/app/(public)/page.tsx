@@ -90,12 +90,12 @@ export default async function HomePage() {
 
       <section
         aria-labelledby="about-title"
-        className="border-t border-portfolio-border/70 bg-portfolio-surface/60"
+        className="border-t border-portfolio-border/70 bg-[url('/assets/photo-about-me.jpg')] bg-cover bg-center bg-portfolio-surface/60"
         id="about"
       >
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
           <div>
-            <p className="mb-5 text-xs font-medium tracking-[0.22em] text-portfolio-accent">
+            <p className="mb-5 p-4 text-md text-center bg-portfolio-accent font-large text-slate-700 tracking-[0.22em]">
               MOH. WAIL IRSYAD
             </p>
             <h2
@@ -104,22 +104,14 @@ export default async function HomePage() {
             >
               About Me
             </h2>
-             <div
-              className="bg-white"
+             {/* <div
+              className="bg-white object-cover"
               id="about-photos"
             >
-              <Image
-                className="pt-20 object-cover"
-                alt="Signing-artist"
-                src="/assets/photo-about-me.jpg"
-                height={700}
-                width={800}
-              />
-
-            </div>
+            </div> */}
           </div>
 
-          <div className="max-w-3xl space-y-6 text-base leading-8 text-portfolio-muted sm:text-lg sm:leading-9">
+          <div className="absolut inset-0 bg-white/60 max-w-3xl space-y-6 text-black blur-500 leading-8 sm:text-lg sm:leading-9">
             <p>
               Moh. Wail. Lahir di Sumenep, Madura, 30 Mei 1986. Ia merupakan
               aktor, akademisi, dan seniman kolaborator yang menempuh pendidikan
@@ -287,8 +279,8 @@ export default async function HomePage() {
                     </div>
                     <a
                       className="inline-flex min-h-11 w-fit items-center border-b border-portfolio-accent px-1 text-sm text-portfolio-accent transition-colors hover:text-portfolio-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-portfolio-accent"
-                      href={`/api/paper/${encodeURIComponent(paper.drive_file_id)}`}
-                      rel="noopener noreferrer"
+                      href={`/api/paper/${encodeURIComponent(paper.drive_file_id)}/preview`}
+                      rel="noreferrer"
                       target="_blank"
                     >
                       Open document
