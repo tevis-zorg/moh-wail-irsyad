@@ -95,7 +95,7 @@ export default async function HomePage() {
       >
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
           <div>
-            <p className="mb-5 p-4 text-md text-center bg-portfolio-accent font-large text-slate-700 tracking-[0.22em]">
+            <p className="mb-5 p-4 text-md text-center bg-indigo-300 font-large text-black tracking-[0.22em] opacity-85">
               MOH. WAIL IRSYAD
             </p>
             <h2
@@ -111,7 +111,7 @@ export default async function HomePage() {
             </div> */}
           </div>
 
-          <div className="absolut inset-0 bg-white/60 max-w-3xl space-y-6 text-black blur-500 leading-8 sm:text-lg sm:leading-9">
+          <div className="p-8 absolut inset-0 bg-white/60 max-w-3xl space-y-6 text-black blur-500 leading-8 sm:text-lg sm:leading-9 justify-center items-center">
             <p>
               Moh. Wail. Lahir di Sumenep, Madura, 30 Mei 1986. Ia merupakan
               aktor, akademisi, dan seniman kolaborator yang menempuh pendidikan
@@ -279,7 +279,7 @@ export default async function HomePage() {
                     </div>
                     <a
                       className="inline-flex min-h-11 w-fit items-center border-b border-portfolio-accent px-1 text-sm text-portfolio-accent transition-colors hover:text-portfolio-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-portfolio-accent"
-                      href={`/api/paper/${encodeURIComponent(paper.drive_file_id)}/preview`}
+                      href={`/api/paper/${encodeURIComponent(paper.drive_file_id)}`}
                       rel="noreferrer"
                       target="_blank"
                     >
